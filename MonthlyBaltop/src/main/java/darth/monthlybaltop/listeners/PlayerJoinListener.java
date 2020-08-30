@@ -1,5 +1,6 @@
-package darth.monthlybaltop;
+package darth.monthlybaltop.listeners;
 
+import darth.monthlybaltop.MonthlyBaltop;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
