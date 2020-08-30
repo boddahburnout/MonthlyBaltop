@@ -14,19 +14,22 @@ import java.time.LocalDate;
 
 import java.util.logging.Logger;
 
-public final class Monthlybaltop extends JavaPlugin {
+public final class MonthlyBaltop extends JavaPlugin {
 
-    private File monthdataFile;
-    private FileConfiguration monthdata;
+    private File monthDataFile;
+    private FileConfiguration monthData;
+    private PlayerNameCache playerNameCache;
+    
     private static Economy econ = null;
     private static final Logger log = Logger.getLogger("Minecraft");
-    LocalDate currentdate = LocalDate.now();
 
     @Override
     public void onEnable() {
         // Plugin startup logic
-        Bukkit.getPluginManager().registerEvents(new Baltopcmd(this), this);
-        Bukkit.getPluginManager().registerEvents(new Baldata(this), this);
+        Bukkit.getPluginManager().registerEvents(new BaltopCommand(this), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(this), this);
+        
+        playerNameCache = new PlayerNameCache(this);
 
         if (!setupEconomy()) {
             log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
@@ -71,18 +74,24 @@ public final class Monthlybaltop extends JavaPlugin {
     }
 
     public FileConfiguration getCustomConfig() {
-        return this.monthdata;
+        return this.monthData;
+    }
+    
+    public PlayerNameCache getPlayerNameCache(){
+        return this.playerNameCache;
     }
 
     private void createCustomConfig() {
-        monthdataFile = new File(getDataFolder(), currentdate.getMonth().toString() + "-" + currentdate.getYear() + ".yml");
-        if (!monthdataFile.exists()) {
-            monthdataFile.getParentFile().mkdirs();
+        LocalDate currentdate = LocalDate.now();
+    
+        monthDataFile = new File(getDataFolder(), currentdate.getMonth().toString() + "-" + currentdate.getYear() + ".yml");
+        if (!monthDataFile.exists()) {
+            monthDataFile.getParentFile().mkdirs();
             saveResource( "monthdata.yml", false);
         }
-        monthdata = new YamlConfiguration();
+        monthData = new YamlConfiguration();
         try {
-            monthdata.load(monthdataFile);
+            monthData.load(monthDataFile);
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
