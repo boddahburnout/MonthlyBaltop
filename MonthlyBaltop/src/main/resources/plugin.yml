@@ -1,0 +1,6 @@
+name: Monthlybaltop
+version: ${project.version}
+main: darth.monthlybaltop.Monthlybaltop
+api-version: 1.14
+authors: [Darthkota98]
+description: Monthly baltop
