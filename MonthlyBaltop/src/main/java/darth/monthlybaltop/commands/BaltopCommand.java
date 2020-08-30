@@ -65,7 +65,7 @@ public class BaltopCommand implements Listener {
                     TopPlayerRanking topPlayerRanking = topPlayerRankings.get(i);
                     
                     String playerName = playerNameCache.getName(topPlayerRanking.getUuid());
-                    event.getPlayer().sendMessage(i + ") " + playerName + ", " + String.valueOf(MonthlyBaltop.getEconomy().getBalance(playerName) - topPlayerRanking.getBalance()));
+                    event.getPlayer().sendMessage((i + 1) + ") " + playerName + ", " + String.valueOf(MonthlyBaltop.getEconomy().getBalance(playerName) - topPlayerRanking.getBalance()));
                 }
             }
         }
