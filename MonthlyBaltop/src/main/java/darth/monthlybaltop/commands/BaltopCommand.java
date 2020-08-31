@@ -52,7 +52,7 @@ public class BaltopCommand implements Listener {
                 PlayerNameCache playerNameCache = plugin.getPlayerNameCache();
     
                 //If we haven't cached top ranked players
-                if(topPlayerRankings.isEmpty()){
+                if(topPlayerRankings.isEmpty() || plugin.cfgm.isMarkedForChange()){
     
                     String key = currentdate.getMonth().toString() + "-" + currentdate.getYear();
                     
@@ -66,6 +66,8 @@ public class BaltopCommand implements Listener {
                     }
                     
                     topPlayerRankings.sort(TopPlayerRanking::compareTo);
+                    
+                    plugin.cfgm.unmarkForChange();
                 }
                 
                 //Loop through top 10 or if there are less ranking than 10, then all rankings and display them

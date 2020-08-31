@@ -11,6 +11,7 @@ import java.io.IOException;
 public class ConfigManager {
     private MonthlyBaltop plugin = MonthlyBaltop.getPlugin(MonthlyBaltop.class);
 
+    private boolean markedForChange = false;
     private FileConfiguration monthData;
     private File monthdataFile;
 
@@ -31,8 +32,31 @@ public class ConfigManager {
 
         monthData = YamlConfiguration.loadConfiguration(monthdataFile);
     }
+    
     public FileConfiguration getMonthData() {
         return monthData;
+    }
+    
+    /**
+     * Checks to see if there has been an update to player data resulting in the need for resorting
+     * @return True if the data needs resorting
+     */
+    public boolean isMarkedForChange(){
+        return markedForChange;
+    }
+    
+    /**
+     * Marks {@link #isMarkedForChange()} to return true
+     */
+    public void markForChange(){
+        markedForChange = true;
+    }
+    
+    /**
+     * Marks {@link #isMarkedForChange()} to return false
+     */
+    public void unmarkForChange(){
+        markedForChange = false;
     }
     public void saveMonthData() {
         try {
@@ -41,6 +65,7 @@ public class ConfigManager {
             e.printStackTrace();
         }
     }
+    
     public void reloadMonthData() {
         monthData = YamlConfiguration.loadConfiguration(monthdataFile);
     }

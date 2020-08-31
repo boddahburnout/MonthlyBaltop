@@ -29,6 +29,7 @@ public class PlayerJoinListener implements Listener {
             plugin.cfgm.getMonthData().set(playerKey, MonthlyBaltop.getEconomy().getBalance(event.getPlayer()));
             plugin.cfgm.saveMonthData();
             plugin.cfgm.reloadMonthData();
+            plugin.cfgm.markForChange();
         }
         else {
             if (plugin.cfgm.getMonthData().contains(playerKey)) {
@@ -38,6 +39,7 @@ public class PlayerJoinListener implements Listener {
                 plugin.cfgm.getMonthData().set(playerKey, MonthlyBaltop.getEconomy().getBalance(event.getPlayer()));
                 plugin.cfgm.saveMonthData();
                 plugin.cfgm.reloadMonthData();
+                plugin.cfgm.markForChange();
                 return;
             }
         }
