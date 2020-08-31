@@ -35,9 +35,10 @@ public final class MonthlyBaltop extends JavaPlugin {
         //config.yml
         File file = new File(getDataFolder() + File.separator + "config.yml");
         if (!file.exists()) {
-            getConfig().addDefault("header", "---Monthly Baltop---");
-            getConfig().addDefault("header-color", "$6");
-            getConfig().addDefault("top-ten-color", "$6");
+            getConfig().addDefault("header", "$6---Monthly Baltop---");
+            getConfig().addDefault("number-color", "$6");
+            getConfig().addDefault("name-color", "$f");
+            getConfig().addDefault("money-color", "$6");
             getConfig().options().copyDefaults(true);
             saveConfig();
         } else {

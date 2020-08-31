@@ -39,7 +39,7 @@ public class BaltopCommand implements Listener {
         
         String[] cmd = event.getMessage().split(" ");
         
-        if (cmd[0].equals("/baltop")) {
+        if (cmd[0].equalsIgnoreCase("/baltop")) {
             
             if (cmd.length > 1) {
                 event.setCancelled(true);
@@ -47,7 +47,8 @@ public class BaltopCommand implements Listener {
             else {
                 
                 event.setCancelled(true);
-                event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('$', plugin.getConfig().getString("header-color"))+plugin.getConfig().getString("header"));
+                event.getPlayer().sendMessage("");
+                event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('$', plugin.getConfig().getString("header")));
                 PlayerNameCache playerNameCache = plugin.getPlayerNameCache();
     
                 //If we haven't cached top ranked players
@@ -73,8 +74,9 @@ public class BaltopCommand implements Listener {
                     TopPlayerRanking topPlayerRanking = topPlayerRankings.get(i);
                     
                     String playerName = playerNameCache.getName(topPlayerRanking.getUuid());
-                    event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes ('$', plugin.getConfig().getString("top-ten-color")) + (i + 1) + ") " + playerName + ", " + String.valueOf(round(MonthlyBaltop.getEconomy().getBalance(playerName) - topPlayerRanking.getBalance(), 2)));
+                    event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes ('$', plugin.getConfig().getString("number-color")) + (i + 1) + ") " + ChatColor.translateAlternateColorCodes ('$', plugin.getConfig().getString("name-color")) + playerName + ChatColor.translateAlternateColorCodes ('$', plugin.getConfig().getString("money-color")) + ", $" + String.valueOf(round(MonthlyBaltop.getEconomy().getBalance(playerName) - topPlayerRanking.getBalance(), 2)));
                 }
+                event.getPlayer().sendMessage("");
             }
         }
     }
