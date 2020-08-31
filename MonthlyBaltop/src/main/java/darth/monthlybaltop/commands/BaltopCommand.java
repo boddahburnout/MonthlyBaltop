@@ -68,8 +68,9 @@ public class BaltopCommand implements Listener {
                         double startbal = (double) plugin.cfgm.getMonthData().get(key + "." + temp);
                         
                         Bukkit.broadcastMessage("Balance for: " + temp + " is " + startbal);
-                        
-                        topPlayerRankings.add(new TopPlayerRanking(playerUUID, startbal));
+                        String playerName = playerNameCache.getName(playerUUID);
+    
+                        topPlayerRankings.add(new TopPlayerRanking(playerUUID, MonthlyBaltop.getEconomy().getBalance(playerName) - startbal, startbal));
                     }
                     
                     topPlayerRankings.sort(TopPlayerRanking::compareTo);
@@ -83,7 +84,10 @@ public class BaltopCommand implements Listener {
                     TopPlayerRanking topPlayerRanking = topPlayerRankings.get(i);
                     
                     String playerName = playerNameCache.getName(topPlayerRanking.getUuid());
-                    event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes ('$', plugin.getConfig().getString("number-color")) + (i + 1) + ") " + ChatColor.translateAlternateColorCodes ('$', plugin.getConfig().getString("name-color")) + playerName + ChatColor.translateAlternateColorCodes ('$', plugin.getConfig().getString("money-color")) + ", $" + String.valueOf(round(MonthlyBaltop.getEconomy().getBalance(playerName) - topPlayerRanking.getBalance(), 2)));
+                    event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes ('$', plugin.getConfig().getString("number-color")) +
+                                                    (i + 1) + ") " + ChatColor.translateAlternateColorCodes ('$', plugin.getConfig().getString("name-color"))
+                                                    + playerName + ChatColor.translateAlternateColorCodes ('$', plugin.getConfig().getString("money-color")) + ", $"
+                                                    + String.valueOf(round(MonthlyBaltop.getEconomy().getBalance(playerName) - topPlayerRanking.getOriginalBal(), 2)));
                 }
                 event.getPlayer().sendMessage("");
             }
