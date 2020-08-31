@@ -4,24 +4,18 @@ import darth.monthlybaltop.commands.BaltopCommand;
 import darth.monthlybaltop.listeners.PlayerJoinListener;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.io.IOException;
-import java.time.LocalDate;
 
 import java.util.logging.Logger;
 
 public final class MonthlyBaltop extends JavaPlugin {
 
-    private File monthDataFile;
-    private FileConfiguration monthData;
+    public ConfigManager cfgm;
     private PlayerNameCache playerNameCache;
-    
+
     private static Economy econ = null;
     private static final Logger log = Logger.getLogger("Minecraft");
 
@@ -30,7 +24,7 @@ public final class MonthlyBaltop extends JavaPlugin {
         // Plugin startup logic
         Bukkit.getPluginManager().registerEvents(new BaltopCommand(this), this);
         Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(this), this);
-        
+
         playerNameCache = new PlayerNameCache(this);
 
         if (!setupEconomy()) {
@@ -41,22 +35,27 @@ public final class MonthlyBaltop extends JavaPlugin {
         //config.yml
         File file = new File(getDataFolder() + File.separator + "config.yml");
         if (!file.exists()) {
+            getConfig().addDefault("header", "$6---Monthly Baltop---");
+            getConfig().addDefault("number-color", "$6");
+            getConfig().addDefault("name-color", "$f");
+            getConfig().addDefault("money-color", "$6");
             getConfig().options().copyDefaults(true);
             saveConfig();
         } else {
             saveConfig();
             reloadConfig();
         }
-        File dataFolder = new File(getDataFolder(), "data");
-        if (!dataFolder.exists()) {
-            dataFolder.mkdir();
-        }
-        createCustomConfig();
+        loadConfigManager();
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+    }
+
+    public void loadConfigManager() {
+        cfgm = new ConfigManager();
+        cfgm.setup();
     }
 
     private boolean setupEconomy() {
@@ -75,27 +74,8 @@ public final class MonthlyBaltop extends JavaPlugin {
         return econ;
     }
 
-    public FileConfiguration getCustomConfig() {
-        return this.monthData;
-    }
-    
-    public PlayerNameCache getPlayerNameCache(){
+    public PlayerNameCache getPlayerNameCache() {
         return this.playerNameCache;
     }
 
-    private void createCustomConfig() {
-        LocalDate currentdate = LocalDate.now();
-    
-        monthDataFile = new File(getDataFolder(), currentdate.getMonth().toString() + "-" + currentdate.getYear() + ".yml");
-        if (!monthDataFile.exists()) {
-            monthDataFile.getParentFile().mkdirs();
-            saveResource( "monthdata.yml", false);
-        }
-        monthData = new YamlConfiguration();
-        try {
-            monthData.load(monthDataFile);
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
-    }
 }

@@ -24,16 +24,20 @@ public class PlayerJoinListener implements Listener {
         String playerKey = key + "." + event.getPlayer().getUniqueId();
         
         plugin.getPlayerNameCache().updateName(event.getPlayer().getUniqueId(), event.getPlayer().getName());
-    
-        if (!plugin.getCustomConfig().contains(key)) {
-            plugin.getCustomConfig().set(playerKey, MonthlyBaltop.getEconomy().getBalance(event.getPlayer()));
+
+        if (!plugin.cfgm.getMonthData().contains(key)) {
+            plugin.cfgm.getMonthData().set(playerKey, MonthlyBaltop.getEconomy().getBalance(event.getPlayer()));
+            plugin.cfgm.saveMonthData();
+            plugin.cfgm.reloadMonthData();
         }
         else {
-            if (plugin.getCustomConfig().contains(playerKey)) {
+            if (plugin.cfgm.getMonthData().contains(playerKey)) {
                 return;
             }
             else {
-                plugin.getCustomConfig().set(playerKey, MonthlyBaltop.getEconomy().getBalance(event.getPlayer()));
+                plugin.cfgm.getMonthData().set(playerKey, MonthlyBaltop.getEconomy().getBalance(event.getPlayer()));
+                plugin.cfgm.saveMonthData();
+                plugin.cfgm.reloadMonthData();
                 return;
             }
         }

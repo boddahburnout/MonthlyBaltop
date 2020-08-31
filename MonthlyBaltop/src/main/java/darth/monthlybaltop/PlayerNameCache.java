@@ -8,13 +8,13 @@ import java.util.Map;
 import java.util.UUID;
 
 public class PlayerNameCache{
-  
+
   private Map<UUID, String> uuidToNameMap;
-  
+
   public PlayerNameCache(MonthlyBaltop plugin){
     uuidToNameMap = new HashMap<>();
   }
-  
+
   /**
    * Updates the stored name for a player
    * @param uuid The {@link UUID} to store
@@ -23,7 +23,7 @@ public class PlayerNameCache{
   public void updateName(UUID uuid, String name){
     uuidToNameMap.put(uuid, name);
   }
-  
+
   /**
    * Gets the player name associated with the {@link UUID}.
    * If there is no name stored, then it tries to get it.
@@ -36,17 +36,17 @@ public class PlayerNameCache{
     if(!uuidToNameMap.containsKey(uuid)){
       storeNameFromUUID(uuid);
     }
-    
+
     return uuidToNameMap.get(uuid);
   }
-  
+
   /**
    * Attempts to store the name from the {@link UUID} provided
    * @param uuid The {@link UUID} to get the player name from
    */
   private void storeNameFromUUID(UUID uuid){
     OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
-    
+
     //If a player is not online and they haven't player before then we store null instead
     if(!offlinePlayer.isOnline() && !offlinePlayer.hasPlayedBefore()){
       uuidToNameMap.put(uuid, "null");
