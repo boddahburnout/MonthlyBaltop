@@ -4,6 +4,7 @@ import darth.monthlybaltop.ConfigManager;
 import darth.monthlybaltop.MonthlyBaltop;
 import darth.monthlybaltop.PlayerNameCache;
 import darth.monthlybaltop.TopPlayerRanking;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
@@ -54,6 +55,10 @@ public class BaltopCommand implements Listener {
                 //If we haven't cached top ranked players
                 if(topPlayerRankings.isEmpty() || plugin.cfgm.isMarkedForChange()){
     
+                    Bukkit.broadcastMessage("Updating the cache");
+                    
+                    topPlayerRankings.clear();
+    
                     String key = currentdate.getMonth().toString() + "-" + currentdate.getYear();
                     
                     for(String temp : plugin.cfgm.getMonthData().getConfigurationSection(key).getKeys(false)){
@@ -61,6 +66,8 @@ public class BaltopCommand implements Listener {
                         UUID playerUUID = UUID.fromString(temp);
         
                         double startbal = (double) plugin.cfgm.getMonthData().get(key + "." + temp);
+                        
+                        Bukkit.broadcastMessage("Balance for: " + temp + " is " + startbal);
                         
                         topPlayerRankings.add(new TopPlayerRanking(playerUUID, startbal));
                     }

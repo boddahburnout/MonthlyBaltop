@@ -1,6 +1,7 @@
 package darth.monthlybaltop.listeners;
 
 import darth.monthlybaltop.MonthlyBaltop;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -30,6 +31,8 @@ public class PlayerJoinListener implements Listener {
             plugin.cfgm.saveMonthData();
             plugin.cfgm.reloadMonthData();
             plugin.cfgm.markForChange();
+    
+            Bukkit.broadcastMessage("Updating data as it didnt exist and marking for change.");
         }
         else {
             if (plugin.cfgm.getMonthData().contains(playerKey)) {
@@ -40,6 +43,7 @@ public class PlayerJoinListener implements Listener {
                 plugin.cfgm.saveMonthData();
                 plugin.cfgm.reloadMonthData();
                 plugin.cfgm.markForChange();
+                Bukkit.broadcastMessage("Updating data and marking for change.");
                 return;
             }
         }
