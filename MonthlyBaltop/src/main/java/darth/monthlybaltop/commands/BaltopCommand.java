@@ -1,12 +1,11 @@
 package darth.monthlybaltop.commands;
 
-import darth.monthlybaltop.ConfigManager;
 import darth.monthlybaltop.MonthlyBaltop;
 import darth.monthlybaltop.PlayerNameCache;
 import darth.monthlybaltop.TopPlayerRanking;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -17,7 +16,6 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 public class BaltopCommand implements Listener {
@@ -48,29 +46,26 @@ public class BaltopCommand implements Listener {
             else {
                 
                 event.setCancelled(true);
-                event.getPlayer().sendMessage("");
-                event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('$', plugin.getConfig().getString("header")));
-                PlayerNameCache playerNameCache = plugin.getPlayerNameCache();
-    
-                //If we haven't cached top ranked players
-                if(topPlayerRankings.isEmpty() || plugin.cfgm.isMarkedForChange()){
-    
-                    Bukkit.broadcastMessage("Updating the cache");
-                    
-                    topPlayerRankings.clear();
-    
-                    String key = currentdate.getMonth().toString() + "-" + currentdate.getYear();
-                    
-                    for(String temp : plugin.cfgm.getMonthData().getConfigurationSection(key).getKeys(false)){
+                        event.getPlayer().sendMessage("");
+                        event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('$', plugin.getConfig().getString("header")));
+                        PlayerNameCache playerNameCache = plugin.getPlayerNameCache();
+
+                        //If we haven't cached top ranked players
+                        if(topPlayerRankings.isEmpty() || plugin.cfgm.isMarkedForChange()){
+
+                            String key = currentdate.getMonth().toString() + "-" + currentdate.getYear();
+
+                            for(String temp : plugin.cfgm.getMonthData().getConfigurationSection(key).getKeys(false)){
+
+                                UUID playerUUID = UUID.fromString(temp);
+
+                                double startbal = (double) plugin.cfgm.getMonthData().get(key + "." + temp);
+
+                                //event.getPlayer().sendMessage(""+MonthlyBaltop.getEconomy().getBalance(Bukkit.getOfflinePlayer(playerUUID)));
+
+                                double monthbal = MonthlyBaltop.getEconomy().getBalance(Bukkit.getOfflinePlayer(playerUUID)) - startbal;
                         
-                        UUID playerUUID = UUID.fromString(temp);
-        
-                        double startbal = (double) plugin.cfgm.getMonthData().get(key + "." + temp);
-                        
-                        Bukkit.broadcastMessage("Balance for: " + temp + " is " + startbal);
-                        String playerName = playerNameCache.getName(playerUUID);
-    
-                        topPlayerRankings.add(new TopPlayerRanking(playerUUID, MonthlyBaltop.getEconomy().getBalance(playerName) - startbal, startbal));
+                                topPlayerRankings.add(new TopPlayerRanking(playerUUID, monthbal));
                     }
                     
                     topPlayerRankings.sort(TopPlayerRanking::compareTo);
@@ -84,10 +79,7 @@ public class BaltopCommand implements Listener {
                     TopPlayerRanking topPlayerRanking = topPlayerRankings.get(i);
                     
                     String playerName = playerNameCache.getName(topPlayerRanking.getUuid());
-                    event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes ('$', plugin.getConfig().getString("number-color")) +
-                                                    (i + 1) + ") " + ChatColor.translateAlternateColorCodes ('$', plugin.getConfig().getString("name-color"))
-                                                    + playerName + ChatColor.translateAlternateColorCodes ('$', plugin.getConfig().getString("money-color")) + ", $"
-                                                    + String.valueOf(round(MonthlyBaltop.getEconomy().getBalance(playerName) - topPlayerRanking.getOriginalBal(), 2)));
+                    event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes ('$', plugin.getConfig().getString("number-color")) + (i + 1) + ") " + ChatColor.translateAlternateColorCodes ('$', plugin.getConfig().getString("name-color")) + playerName + ChatColor.translateAlternateColorCodes ('$', plugin.getConfig().getString("money-color")) + ", $" + String.valueOf(round(topPlayerRanking.getBalance(), 2)));
                 }
                 event.getPlayer().sendMessage("");
             }
