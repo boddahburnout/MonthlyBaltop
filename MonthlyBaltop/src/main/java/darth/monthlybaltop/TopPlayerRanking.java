@@ -6,10 +6,12 @@ public class TopPlayerRanking implements Comparable{
   
   private UUID uuid;
   private double balance;
+  private double startBal;
   
-  public TopPlayerRanking(UUID uuid, double balance){
+  public TopPlayerRanking(UUID uuid, double balance, double startBal){
     this.uuid = uuid;
     this.balance = balance;
+    this.startBal = startBal;
   }
   
   public UUID getUuid(){
@@ -18,6 +20,10 @@ public class TopPlayerRanking implements Comparable{
   
   public double getBalance(){
     return balance;
+  }
+  
+  public double getStartBal(){
+    return startBal;
   }
   
   @Override

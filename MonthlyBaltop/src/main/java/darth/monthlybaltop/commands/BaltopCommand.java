@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -26,6 +27,22 @@ public class BaltopCommand implements Listener {
 
     public BaltopCommand(MonthlyBaltop conf) {
         plugin = conf;
+        
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                List<TopPlayerRanking> newList = new ArrayList<>();
+                
+                for(TopPlayerRanking topPlayerRanking : topPlayerRankings){
+                    UUID uuid = topPlayerRanking.getUuid();
+                    double monthBal = MonthlyBaltop.getEconomy().getBalance(Bukkit.getOfflinePlayer(uuid)) - topPlayerRanking.getStartBal();
+                    TopPlayerRanking newRanking = new TopPlayerRanking(uuid, monthBal, topPlayerRanking.getStartBal());
+                    newList.add(newRanking);
+                }
+                newList.sort(TopPlayerRanking::compareTo);
+                topPlayerRankings = newList;
+            }
+        }.runTaskTimer(conf, 5 * 60 * 20, 5 * 20 * 60);
     }
     
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -65,7 +82,7 @@ public class BaltopCommand implements Listener {
 
                                 double monthbal = MonthlyBaltop.getEconomy().getBalance(Bukkit.getOfflinePlayer(playerUUID)) - startbal;
                         
-                                topPlayerRankings.add(new TopPlayerRanking(playerUUID, monthbal));
+                                topPlayerRankings.add(new TopPlayerRanking(playerUUID, monthbal, startbal));
                     }
                     
                     topPlayerRankings.sort(TopPlayerRanking::compareTo);
