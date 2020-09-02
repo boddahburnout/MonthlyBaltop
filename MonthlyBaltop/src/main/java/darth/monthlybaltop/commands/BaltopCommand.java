@@ -27,12 +27,12 @@ public class BaltopCommand implements Listener {
 
     public BaltopCommand(MonthlyBaltop conf) {
         plugin = conf;
-        
+
         new BukkitRunnable(){
             @Override
             public void run(){
                 List<TopPlayerRanking> newList = new ArrayList<>();
-                
+
                 for(TopPlayerRanking topPlayerRanking : topPlayerRankings){
                     UUID uuid = topPlayerRanking.getUuid();
                     double monthBal = MonthlyBaltop.getEconomy().getBalance(Bukkit.getOfflinePlayer(uuid)) - topPlayerRanking.getStartBal();
@@ -47,16 +47,10 @@ public class BaltopCommand implements Listener {
     
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onCommandPreProcess(PlayerCommandPreprocessEvent event) {
-
         plugin.loadConfigManager();
-
-        
         LocalDate currentdate = LocalDate.now();
-        
         String[] cmd = event.getMessage().split(" ");
-        
         if (cmd[0].equalsIgnoreCase("/baltop")) {
-            
             if (cmd.length > 1) {
                 event.setCancelled(true);
             }
