@@ -25,6 +25,9 @@ public final class MonthlyBaltop extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new BaltopCommand(this), this);
         Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(this), this);
 
+        this.getCommand("ranking").setExecutor(new BaltopCommand(this));
+        this.getCommand("btupdate").setExecutor(new BaltopCommand(this));
+
         playerNameCache = new PlayerNameCache(this);
 
         if (!setupEconomy()) {

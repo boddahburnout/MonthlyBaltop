@@ -4,3 +4,10 @@ main: darth.monthlybaltop.MonthlyBaltop
 api-version: 1.14
 authors: [Darthkota98]
 description: Monthly baltop
+commands:
+  ranking:
+    usage: /ranking
+    description: Check your ranking
+  btupdate:
+    usage: /btupdate
+    description: Force Baltop month data to refresh
